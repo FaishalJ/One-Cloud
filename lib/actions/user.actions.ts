@@ -10,7 +10,7 @@ const getUserByEmail = async (email: string) => {
   const result = await databases.listDocuments(
     appwriteConfig.databaseId,
     appwriteConfig.usersCollectionId,
-    queries: [Query.equal(attribute: "email", value: [email])],
+    [Query.equal("email", [email])],
   );
   return result.total > 0 ? result.documents[0] : null
 }
