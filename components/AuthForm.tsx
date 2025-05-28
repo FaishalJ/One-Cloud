@@ -16,20 +16,27 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form";
+import OtpModal from "./OTPModal";
+
 import { Input } from "./ui/input";
+import { createAccount } from "lib/actions/user.actions";
 
 type FormType = "sign-in" | "sign-up";
 
 const AuthFormSchema = (formType: FormType) => {
   return z.object({
     email: z.string().email(),
-    fullName: formType === "sign-up" ? z.string().min(2).max(50) : z.string().optional(),
+    fullName:
+      formType === "sign-up"
+        ? z.string().min(2).max(50)
+        : z.string().optional(),
   });
 };
 
 export default function AuthForm({ type }: { type: FormType }) {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [accountId, setAccountId] = useState(null);
 
   // 1. Define your form.
   const formSchema = AuthFormSchema(type);
@@ -44,7 +51,20 @@ export default function AuthForm({ type }: { type: FormType }) {
   // 2. Define a submit handler.
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     // Do something with the form values.
-    console.log(values);
+    setIsLoading(true);
+    setErrorMessage("");
+
+    try {
+      const user = await createAccount({
+        fullName: values.fullName || "",
+        email: values.email,
+      });
+      setAccountId(user.accountId);
+    } catch (error) {
+      setErrorMessage("Failed to create account. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -133,6 +153,9 @@ export default function AuthForm({ type }: { type: FormType }) {
           </div>
         </form>
       </Form>
+      {true && (
+        <OtpModal email={form.getValues("email")} accountId={accountId} />
+      )}
     </>
   );
 }
