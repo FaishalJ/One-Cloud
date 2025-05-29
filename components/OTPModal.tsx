@@ -1,25 +1,22 @@
+"use client";
+
 import { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 import {
   AlertDialog,
   AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "./ui/alert-dialog";
 
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSeparator,
-  InputOTPSlot,
-} from "./ui/input-otp";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "./ui/input-otp";
 import { Button } from "./ui/button";
+import { sendEmailOTP, verifySecret } from "../lib/actions/user.actions";
 
 interface OtpModalProps {
   accountId: string;
@@ -27,6 +24,7 @@ interface OtpModalProps {
 }
 
 export default function OtpModal({ accountId, email }: OtpModalProps) {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(true);
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -34,22 +32,20 @@ export default function OtpModal({ accountId, email }: OtpModalProps) {
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setIsLoading(true);
-    
+
     try {
-      // const sessionId = await verifySecret({ accountId, password });
+      const sessionId = await verifySecret({ accountId, password });
 
-      // console.log({ sessionId });
-
-      // if (sessionId) router.push("/");
+      if (sessionId) router.push("/");
     } catch (error) {
       console.log("Failed to verify OTP", error);
     }
 
     setIsLoading(false);
-  }
+  };
 
   const handleResendOtp = async () => {
-    // await sendEmailOTP({ email });
+    await sendEmailOTP({ email });
   };
 
   return (
@@ -67,7 +63,7 @@ export default function OtpModal({ accountId, email }: OtpModalProps) {
               className="otp-close-button"
             />
           </AlertDialogTitle>
-          
+
           <AlertDialogDescription className="subtitle-2 text-center text-light-100">
             We&apos;ve sent a code to{" "}
             <span className="pl-1 text-brand">{email}</span>

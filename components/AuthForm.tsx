@@ -36,7 +36,7 @@ const AuthFormSchema = (formType: FormType) => {
 export default function AuthForm({ type }: { type: FormType }) {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [accountId, setAccountId] = useState(null);
+  const [accountId, setAccountId] = useState<string | null>(null);
 
   // 1. Define your form.
   const formSchema = AuthFormSchema(type);
@@ -50,7 +50,6 @@ export default function AuthForm({ type }: { type: FormType }) {
 
   // 2. Define a submit handler.
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    // Do something with the form values.
     setIsLoading(true);
     setErrorMessage("");
 
@@ -153,7 +152,7 @@ export default function AuthForm({ type }: { type: FormType }) {
           </div>
         </form>
       </Form>
-      {true && (
+      {accountId && (
         <OtpModal email={form.getValues("email")} accountId={accountId} />
       )}
     </>
