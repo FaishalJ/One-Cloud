@@ -1,7 +1,7 @@
-import { InputFile, ID } from "node-appwrite";
+import { ID } from "node-appwrite";
 import { createAdminClient } from "lib/appwrite";
 import { appwriteConfig } from "lib/appwrite/config";
-import { getFileType, parseStringify } from "lib/utils";
+import { getFileType, parseStringify, constructFileUrl } from "lib/utils";
 import { revalidatePath } from "next/cache";
 
 const handleError = (error: unknown, message: string) => {
@@ -19,12 +19,12 @@ export const uploadFile = async ({
 
   try {
     const fileBuffer = await file.arrayBuffer();
-    const inputFile = InputFile.fromBuffer(Buffer.from(fileBuffer), file.name);
-
+    
     const bucketFile = await storage.createFile(
       appwriteConfig.bucketId,
       ID.unique(),
-      inputFile,
+      Buffer.from(fileBuffer),
+      file.name
     );
 
     const fileDocument = {
