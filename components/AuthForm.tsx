@@ -19,10 +19,9 @@ import {
 import OtpModal from "./OTPModal";
 
 import { Input } from "./ui/input";
-import { createAccount } from "lib/actions/user.actions";
+import { createAccount, signInUser } from "../lib/actions/user.actions";
 
 type FormType = "sign-in" | "sign-up";
-
 const AuthFormSchema = (formType: FormType) => {
   return z.object({
     email: z.string().email(),
@@ -54,10 +53,14 @@ export default function AuthForm({ type }: { type: FormType }) {
     setErrorMessage("");
 
     try {
-      const user = await createAccount({
-        fullName: values.fullName || "",
-        email: values.email,
-      });
+      const user =
+        type === "sign-up"
+          ? await createAccount({
+              fullName: values.fullName || "",
+              email: values.email,
+            })
+          : await signInUser({ email: values.email });
+
       setAccountId(user.accountId);
     } catch (error) {
       setErrorMessage("Failed to create account. Please try again.");
@@ -84,7 +87,7 @@ export default function AuthForm({ type }: { type: FormType }) {
 
                     <FormControl>
                       <Input
-                        placeholder="Enter you full name"
+                        placeholder="Enter your full name"
                         {...field}
                         className="shad-input"
                       />
@@ -107,7 +110,7 @@ export default function AuthForm({ type }: { type: FormType }) {
 
                   <FormControl>
                     <Input
-                      placeholder="Enter you full email"
+                      placeholder="Enter your full email"
                       {...field}
                       className="shad-input"
                     />

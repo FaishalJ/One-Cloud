@@ -6,6 +6,8 @@ import { appwriteConfig } from "../appwrite/config";
 
 import { createAdminClient, createSessionClient } from "../appwrite";
 import { parseStringify } from "lib/utils";
+import { redirect } from "next/navigation";
+import { avatarPlaceholderUrl } from "../../constants";
 
 /**Get email */
 const getUserByEmail = async (email: string) => {
@@ -58,8 +60,7 @@ export const createAccount = async ({ fullName, email }: ICreateAccount) => {
       {
         fullName,
         email,
-        avatar:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUqDBA8jnL_ezUoa8s_GgnboMkEeE4M7-LyA&s",
+        avatar:avatarPlaceholderUrl,
         accountId,
       },
     );
@@ -112,5 +113,34 @@ export const getCurrentUser = async () => {
     return parseStringify(user.documents[0]);
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const signOutUser = async () => {
+  const { account } = await createSessionClient();
+
+  try {
+    await account.deleteSession("current");
+    (await cookies()).delete("appwrite-session");
+  } catch (error) {
+    handleError(error, "Failed to sign out user");
+  } finally {
+    redirect("/sign-in");
+  }
+};
+
+export const signInUser = async ({ email }: { email: string }) => {
+  try {
+    const existingUser = await getUserByEmail(email);
+
+    // User exists, send OTP
+    if (existingUser) {
+      await sendEmailOTP({ email });
+      return parseStringify({ accountId: existingUser.accountId });
+    }
+
+    return parseStringify({ accountId: null, error: "User not found" });
+  } catch (error) {
+    handleError(error, "Failed to sign in user");
   }
 };
