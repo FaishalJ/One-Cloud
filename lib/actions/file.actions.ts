@@ -18,7 +18,8 @@ export const uploadFile = async ({
   const { storage, databases } = await createAdminClient();
 
   try {
-    const inputFile = InputFile.fromBuffer(file, file.name);
+    const fileBuffer = await file.arrayBuffer();
+    const inputFile = InputFile.fromBuffer(Buffer.from(fileBuffer), file.name);
 
     const bucketFile = await storage.createFile(
       appwriteConfig.bucketId,
