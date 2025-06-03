@@ -5,13 +5,16 @@ import FileUploader from "./FileUploader";
 
 import { signOutUser } from "../lib/actions/user.actions";
 
-export default function Header() {
+interface Props {
+  userId: string;
+  accountId: string;
+}
+export default function Header({ userId, accountId }: Props) {
   return (
     <header className="header">
       <Search />
       <div className="header-wrapper">
-        <FileUploader />
-        {/* <FileUploader ownerId={userId} accountId={accountId} /> */}
+        <FileUploader ownerId={userId} accountId={accountId} />
 
         <form
           action={async () => {
