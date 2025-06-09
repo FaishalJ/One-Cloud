@@ -1,4 +1,4 @@
-// File: /home/runner/workspace/app/(auth)/layout.tsx
+// File: C:\Users\faish\OneDrive\Desktop\DESKTOP\Websites\OneCloud\app\(auth)\layout.tsx
 import * as entry from '../../../../app/(auth)/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

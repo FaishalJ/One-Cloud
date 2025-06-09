@@ -1,4 +1,4 @@
-// File: /home/runner/workspace/app/(root)/page.tsx
+// File: C:\Users\faish\OneDrive\Desktop\DESKTOP\Websites\OneCloud\app\(root)\page.tsx
 import * as entry from '../../../../app/(root)/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

@@ -9,7 +9,7 @@ import { parseStringify } from "lib/utils";
 import { redirect } from "next/navigation";
 import { avatarPlaceholderUrl } from "../../constants";
 
-/**Get email */
+//==========> Get email
 const getUserByEmail = async (email: string) => {
   const { databases } = await createAdminClient();
   const result = await databases.listDocuments(
@@ -20,13 +20,13 @@ const getUserByEmail = async (email: string) => {
   return result.total > 0 ? result.documents[0] : null;
 };
 
-/**Check Error */
+//==========> Check Error
 const handleError = (error: unknown, message: string) => {
   console.error(error, message);
   throw error;
 };
 
-/**Send OTP */
+//==========> Send OTP
 export const sendEmailOTP = async ({ email }: { email: string }) => {
   const { account } = await createAdminClient();
   try {
@@ -38,7 +38,7 @@ export const sendEmailOTP = async ({ email }: { email: string }) => {
   }
 };
 
-/**Create acount */
+//==========> Create acount
 interface ICreateAccount {
   fullName: string;
   email: string;
@@ -69,6 +69,7 @@ export const createAccount = async ({ fullName, email }: ICreateAccount) => {
   return parseStringify({ accountId });
 };
 
+//==========> verifySecret
 interface IVerifySecreteProps {
   accountId: string;
   password: string;
@@ -95,7 +96,7 @@ export const verifySecret = async ({
   }
 };
 
-/**Get current user */
+//==========> Get current user
 export const getCurrentUser = async () => {
   try {
     const { databases, account } = await createSessionClient();
@@ -112,10 +113,11 @@ export const getCurrentUser = async () => {
 
     return parseStringify(user.documents[0]);
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
+//==========> signOutUser
 export const signOutUser = async () => {
   const { account } = await createSessionClient();
 
@@ -129,6 +131,7 @@ export const signOutUser = async () => {
   }
 };
 
+//==========> signInUser
 export const signInUser = async ({ email }: { email: string }) => {
   try {
     const existingUser = await getUserByEmail(email);

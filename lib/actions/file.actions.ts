@@ -7,11 +7,13 @@ import { constructFileUrl, getFileType, parseStringify } from "../../lib/utils";
 import { revalidatePath } from "next/cache";
 import { getCurrentUser } from "./user.actions";
 
+//==========> Handle Error
 const handleError = (error: unknown, message: string) => {
   console.log(error, message);
   throw error;
 };
 
+//==========> UploadFile
 export const uploadFile = async ({
   file,
   ownerId,
@@ -58,6 +60,7 @@ export const uploadFile = async ({
   }
 };
 
+//==========> CreateQueries
 const createQueries = (
   currentUser: Models.Document,
   types: string[],
@@ -87,6 +90,7 @@ const createQueries = (
   return queries;
 };
 
+//==========> GetFiles
 export const getFiles = async ({
   types = [],
   searchText = "",
@@ -115,6 +119,7 @@ export const getFiles = async ({
   }
 };
 
+//==========> RenameFile
 export const renameFile = async ({
   fileId,
   name,
@@ -141,6 +146,7 @@ export const renameFile = async ({
   }
 };
 
+//==========> UpdateFileUser
 export const updateFileUsers = async ({
   fileId,
   emails,
@@ -165,6 +171,7 @@ export const updateFileUsers = async ({
   }
 };
 
+//==========> deleteFile
 export const deleteFile = async ({
   fileId,
   bucketFileId,
@@ -190,7 +197,7 @@ export const deleteFile = async ({
   }
 };
 
-// ============================== TOTAL FILE SPACE USED
+//==========> TOTAL FILE SPACE USED
 export async function getTotalSpaceUsed() {
   try {
     const { databases } = await createSessionClient();
